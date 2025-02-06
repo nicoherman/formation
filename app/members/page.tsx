@@ -6,7 +6,7 @@ import { useState, useEffect, useTransition } from 'react'
 import { User } from "@/types/types"
 
 import Image from 'next/image'
-import Alert from '../components/Alert'
+import Alert from '../components/AlertSuccess'
 
 export default function PageMembers() {
 

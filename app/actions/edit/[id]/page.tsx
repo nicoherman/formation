@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 
-import Alert from '../../../components/Alert'
+import Alert from '../../../components/AlertSuccess'
 
 import { getUserById, updateUser } from '../../services/actionUsers'
 
@@ -66,7 +66,7 @@ export default function EditPageUser() {
 
   return (
 
-        <div className="bg-green-200 min-h-screen flex items-center">
+        <div className="bg-yellow-200 min-h-screen flex items-center">
         <div className="bg-white p-10 md:w-2/3 lg:w-1/2 mx-auto rounded">
         <h3 className='text-center mb-5 text-3xl text-gree'>MODIFIER : {user.name}</h3>
             <form onSubmit={handleSubmit} className='flex flex-col'>

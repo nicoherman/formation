@@ -9,6 +9,10 @@ import { User } from "@/types/types"
 import Image from 'next/image'
 import {getAllUsers, deleteUser} from './services/actionUsers'
 
+import AlertSuccess from '../components/AlertSuccess'
+import { Confirm, Loading } from 'notiflix'
+import AlertError from '../components/AlertError'
+
 export default function PageUsers() {
 
     const [users, setUsers] = useState<User[]>([])
@@ -22,8 +26,7 @@ export default function PageUsers() {
                     const usersData = await getAllUsers()
                     setUsers(usersData)
                 })
-            }
-            catch(error: any){
+            }catch(error: any){
                 setErrors(error.message)
             }
         }
@@ -33,21 +36,42 @@ export default function PageUsers() {
 
     const handleDelete = async (id: number) => {
 
-        if(confirm('Etes vous sur de vouloir supprimer cet utilisateur ?'))
-
-        try {
-            startTransition(async ()=> {
-
-                await deleteUser(id)
-                setUsers(users.filter(user => user.id !== id))
-                
-            })
-        }catch(error: any){
-            setErrors(error.message)
-    }
+            Confirm.show(
+                'Confirmation de suppression',
+                'Etes vous sûr de vouloir supprimer cet utilisateur ?',
+                'Yes',
+                'No',
+                () => {
+                    try {
+                        startTransition(async ()=> {
+                            await deleteUser(id)
+                            setUsers(users.filter(user => user.id !== id))
+                        })
+                    }catch(error: any){
+                        setErrors(error.message)
+                }
+                },
+                () => {
+                    AlertError('You have clicked on No button')
+                },
+                {
+                    /* Custom options */
+                    backOverlayColor: 'rgba(139,0,0,0.8)',
+                    titleColor: 'rgba(139,0,0,0.8)',
+                    okButtonColor: '#f8f8f8',
+                    okButtonBackground: 'rgba(139,0,0,0.8)',
+                    cancelButtonColor: '#f8f8f8',
+                    cancelButtonBackground: '#a9a9a9',
+                    titleFontSize: '20px',
+                }
+            )
 }
 
+const loading = (message) => {return Loading.dots(message)}
+const removeLoading = () => {return Loading.remove()}
 
+//TRES IMPORTANT -- Placer le loader hors du jsx pour éviter les erreurs de rendu
+{isPending? loading('Chargement en cours...') : removeLoading()}
 
 
   return (
@@ -55,10 +79,7 @@ export default function PageUsers() {
         <h1 className='text-3xl font-black uppercase'>
             Page Actions
         </h1>
-
-        {isPending && <p className="">loading...</p>}
-
-        {errors && <p className="">{errors}</p>}
+        {errors && AlertError(errors)}
 
 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 p-3 md:p-4 xl:p-5 dark:bg-gray-900">
              {users.map(user => (
@@ -68,7 +89,7 @@ export default function PageUsers() {
                     <Image 
                               className='text-white'
                               src={`/avatar${user.gender}.png`} //Image de remplacement
-                              width={800} 
+                              width={800}
                               height={800}
                               alt="Avatar"
                               onLoad={()=>{

@@ -4,7 +4,7 @@ import { useState, useEffect, useTransition, FormEvent } from 'react'
 import { useParams } from 'next/navigation'
 import { User } from '@/types/types'
 import Link from 'next/link'
-import Alert from '../../../components/Alert';
+import Alert from '../../../components/AlertSuccess';
 
 export default function EditPage() {
 

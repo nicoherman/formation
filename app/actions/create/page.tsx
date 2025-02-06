@@ -2,13 +2,15 @@
 
 import React from 'react'
 import {useState, FormEvent } from 'react'
-import Alert from '../../components/Alert'
+import AlertSuccess from '../../components/AlertSuccess'
+import AlertError from '../../components/AlertError'
 
 import {createUser} from '../services/actionUsers'
+import { useRouter } from 'next/navigation'
 
 export default function CreatePage() {
 
-    const[age, setAge] = useState<number>(0)
+    const[age, setAge] = useState<number>(18)
     const[name, setName] = useState<string>('')
     const[gender, setGender] = useState<string>('')
     const[email, setEmail] = useState<string>('')
@@ -16,6 +18,8 @@ export default function CreatePage() {
 
     const[errors, setErrors] = useState<string | null>(null)
     const[success, setSuccess] = useState<string>('')
+
+    const router = useRouter()
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
@@ -34,7 +38,8 @@ export default function CreatePage() {
             setName('')
             setGender('')
             setEmail('')
-            setCountry('')
+            setCountry('') 
+            router.push('/actions')
 
 
         } catch (error: any) {
@@ -49,8 +54,8 @@ export default function CreatePage() {
     <div className="bg-white p-10 md:w-2/3 lg:w-1/2 mx-auto rounded">
     <h3 className='text-center mb-5 text-3xl text-gree'>AJOUTER UN NOUVEL UTILISATEUR</h3>
         <form onSubmit={handleSubmit} className='flex flex-col'>
-        {errors && Alert(errors)}
-        {success && Alert(success)}
+        {success && AlertSuccess(success)}
+        {errors && AlertError(errors)}
             <div className="flex items-center mb-5">
                 <label className="w-20 inline-block text-right mr-4 text-gray-500">Age</label>
                 <input 
@@ -59,6 +64,8 @@ export default function CreatePage() {
                     placeholder='Indiquez votre Age'
                     required
                     value={age}
+                    min={18}
+                    max={100}
                     onChange={(e) => setAge(parseInt(e.target.value))}
                 />
             </div>
@@ -75,13 +82,13 @@ export default function CreatePage() {
             </div>
             <div className="flex items-center mb-10">
                 <label className="w-20 inline-block text-right mr-4 text-gray-500">Gender (Sexe)</label>
-                <input className="border-b-2 border-gray-400 flex-1 py-2 placeholder-gray-300 outline-none focus:border-green-400"
-            type="text"
-            placeholder='Indiquez votre sexe'
+                <select className="border-b-2 border-gray-400 flex-1 py-2 placeholder-gray-300 outline-none focus:border-green-400"
             required
             value={gender}
-            onChange={(e) => setGender(e.target.value)}
-             />
+            onChange={(option) => setGender(option.target.value)}>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
             </div>
             <div className="flex items-center mb-10">
                 <label className="w-20 inline-block text-right mr-4 text-gray-500">Email</label>

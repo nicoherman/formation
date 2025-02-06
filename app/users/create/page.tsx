@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {useState, FormEvent } from 'react'
-import Alert from '../../components/Alert'
+import Alert from '../../components/AlertSuccess'
 
 export default function CreatePage() {
 

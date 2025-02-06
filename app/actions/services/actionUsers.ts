@@ -7,7 +7,7 @@ import { User } from '@/types/types'
 
 const dataPath = path.join(process.cwd(), 'data.json')
 
-const readUsers = ()=> {
+const readUsers = (): User[] => {
     const jsonData = fs.readFileSync(dataPath, 'utf-8')
     return JSON.parse(jsonData)
 }
